@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CamChat</string>
+    <!-- Strings related to login -->
+    <string name="prompt_username">John Doe</string>
+    <string name="prompt_email">johndoe@gmail.com</string>
+    <string name="prompt_password">********</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_register">Register</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_email">Not a valid email address</string>
+    <string name="invalid_password">Password must be more than 6 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="name">Full name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="authentication_info">Create an account with us or Login using your existing details.</string>
+</resources>

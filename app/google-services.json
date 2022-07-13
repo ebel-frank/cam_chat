@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "813153332504",
+    "project_id": "journal-ca7b5",
+    "storage_bucket": "journal-ca7b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813153332504:android:f9abe5333b8a645f7fc26d",
+        "android_client_info": {
+          "package_name": "com.horizons.camchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813153332504-uji4itns2u6f0he459lv3d7ehvvniqsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp0Ua4di06pD8OIBNUqjAD1F4uCrQpj00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813153332504-uji4itns2u6f0he459lv3d7ehvvniqsr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813153332504:android:3558c621713f25177fc26d",
+        "android_client_info": {
+          "package_name": "com.horizons.training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813153332504-uji4itns2u6f0he459lv3d7ehvvniqsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp0Ua4di06pD8OIBNUqjAD1F4uCrQpj00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813153332504-uji4itns2u6f0he459lv3d7ehvvniqsr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
