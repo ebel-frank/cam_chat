@@ -5,40 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".activity.ContactActivity">
+    tools:context=".activity.UsersActivity">
+
+    <ImageView
+        android:id="@+id/back_arrow"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:srcCompat="@drawable/ic_arrow_back" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/contacts"
+        android:layout_marginStart="20dp"
+        android:text="@string/users"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/back_arrow"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/add_users"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toStartOf="@+id/notification"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_contact_add"
-        app:tint="@color/black"
-        android:contentDescription="@null" />
-
-    <ImageView
-        android:id="@+id/notification"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_notifications"
-        app:tint="@color/black"
-        android:contentDescription="@null" />
 
     <LinearLayout
         android:id="@+id/search_bar"
@@ -74,6 +61,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_bar"
         tools:itemCount="5"
-        tools:listitem="@layout/contact_layout" />
+        tools:listitem="@layout/users_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/contact_icon"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:src="@drawable/ic_contact_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        tools:text="Elena West"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/contact_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/contact_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/contact_name"
+        app:layout_constraintTop_toBottomOf="@+id/contact_name"
+        tools:text="/@elena" />
+
+    <LinearLayout
+        android:id="@+id/add_user"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:background="@drawable/button_bg_outline"
+        app:layout_constraintBottom_toBottomOf="@+id/contact_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/contact_icon">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADD"
+            android:textSize="20sp"
+            android:textColor="@color/purple_500"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

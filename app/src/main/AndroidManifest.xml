@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CamChat">
+        <activity
+            android:name=".activity.CallActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.UsersActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.NotificationActivity"
+            android:exported="true" />
         <activity
             android:name=".activity.ContactActivity"
             android:exported="true" />

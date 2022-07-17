@@ -14,4 +14,11 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="authentication_info">Create an account with us or Login using your existing details.</string>
+    <string name="contacts">Contacts</string>
+    <string name="users">Users</string>
+    <string name="search">Search</string>
+    <string name="notification">Notification</string>
+
+    <string name="app_id">15cbc7f31f50483890fbf764286c4c82</string>
+    <string name="agora_token">3a90d9754de94ace916649246b6d8519</string>
 </resources>

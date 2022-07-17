@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -48,15 +49,10 @@ class LoginActivity : AppCompatActivity() {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
-            if (loginState.isDataValid) {
-                if (loginState.activateRegister) {
-                    register.isEnabled = true
-                    login.isEnabled = false
-                } else {
-                    login.isEnabled = true
-                    register.isEnabled = false
-                }
-            }
+            login.isEnabled = loginState.isDataValid && !loginState.activateRegister
+            register.isEnabled = loginState.isDataValid && loginState.activateRegister
+
+            Log.d("TAG", "isDataValid: ${loginState.isDataValid}, activateRegister: ${loginState.activateRegister}")
 
             if (loginState.usernameError != null) {
                 email.error = getString(loginState.usernameError)
@@ -92,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
+//            startActivity(Intent(this, ContactActivity::class.java))
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -104,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    loading.visibility = View.GONE
                 }
         }
 
@@ -113,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        database.getReference("Users").child(auth.currentUser?.uid!!)
+                        database.getReference("users").child(auth.currentUser?.uid!!)
                             .setValue(mapOf("name" to name.text.toString()))
                     } else {
                         // If registration fails, display a message to the user.
@@ -122,6 +120,7 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    loading.visibility = View.GONE
                 }
         }
     }
@@ -135,7 +134,6 @@ class LoginActivity : AppCompatActivity() {
             finishAffinity()
         }
     }
-
 }
 
 /**
@@ -146,9 +144,8 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
         }
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
+
