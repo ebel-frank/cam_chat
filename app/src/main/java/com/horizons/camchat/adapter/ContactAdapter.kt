@@ -1,15 +1,18 @@
 package com.horizons.camchat.adapter
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amulyakhare.textdrawable.TextDrawable
+import com.horizons.camchat.R
+import com.horizons.camchat.activity.CallActivity
 import com.horizons.camchat.databinding.ContactLayoutBinding
 import com.horizons.camchat.model.ContactModel
 import java.util.*
 
-class ContactAdapter(private val contacts: List<ContactModel>) :
+class ContactAdapter(var contacts: List<ContactModel>) :
     RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,16 +27,22 @@ class ContactAdapter(private val contacts: List<ContactModel>) :
 
     override fun getItemCount(): Int = contacts.size
 
+    fun setData(contacts: List<ContactModel>) {
+        this.contacts = contacts
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(itemBinding: ContactLayoutBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         private val rnd = Random()
         private val contactIcon = itemBinding.contactIcon
         private val contactName = itemBinding.contactName
         private val contactDate = itemBinding.callInfo
+        private val callIcon = itemBinding.callIcon
 
         init {
             itemBinding.videoCall.setOnClickListener {
-
+                it.context.startActivity(Intent(it.context, CallActivity::class.java))
             }
         }
 
@@ -46,13 +55,13 @@ class ContactAdapter(private val contacts: List<ContactModel>) :
 
             when (contact.call_type) {
                 0 -> {
-
+                    callIcon.setImageResource(R.drawable.ic_call_made)
                 }
                 1 -> {
-
+                    callIcon.setImageResource(R.drawable.ic_call_received)
                 }
                 2 -> {
-
+                    callIcon.setImageResource(R.drawable.ic_call_missed)
                 }
             }
         }

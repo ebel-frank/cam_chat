@@ -1,44 +1,63 @@
 package com.horizons.camchat.activity
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.SurfaceView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.horizons.camchat.R
 import com.horizons.camchat.databinding.ActivityCallBinding
+import io.agora.rtc.Constants
+import io.agora.rtc.IRtcEngineEventHandler
+import io.agora.rtc.RtcEngine
+import io.agora.rtc.video.VideoCanvas
+import io.agora.rtc.video.VideoEncoderConfiguration
+
+private const val PERMISSION_REQUEST_ID = 23
+
+// Ask for Android device permissions at runtime.
+private val ALL_REQUESTED_PERMISSIONS = arrayOf(
+    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.CAMERA,
+    Manifest.permission.READ_PHONE_STATE
+)
 
 class CallActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallBinding
 
-    private val PERMISSION_REQUEST_ID = 23
+    private lateinit var rtcEngine: RtcEngine
 
-    // Ask for Android device permissions at runtime.
-    private val ALL_REQUESTED_PERMISSIONS = arrayOf(
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_PHONE_STATE
-    )
+    private var remoteView: SurfaceView? = null
+    private var localView: SurfaceView? = null
 
-    private val mRtcEventHandler = object : IRtcEngineEventHandler() {
-        fun onFirstRemoteVideoDecoded(uid: Int, width: Int, height: Int, elapsed: Int) {
-            runOnUiThread { // set first remote user to the main bg video container
-                setupRemoteVideoStream(uid)
+    private val rtcEventHandler = object : IRtcEngineEventHandler() {
+        // received remote user first video frame
+        override fun onFirstRemoteVideoDecoded(uid: Int, width: Int, height: Int, elapsed: Int) {
+            runOnUiThread {
+                setupRemoteVideoView(uid)
             }
         }
 
-        // remote user has left channel
-        fun onUserOffline(uid: Int, reason: Int) { // Tutorial Step 7
-            runOnUiThread { onRemoteUserLeft() }
+        override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
+            Log.d("TAG", "Success")
         }
 
-        // remote user has toggled their video
-        fun onUserMuteVideo(uid: Int, toggle: Boolean) { // Tutorial Step 10
-            runOnUiThread { onRemoteUserVideoToggle(uid, toggle) }
+        // remote user has left channel
+        override fun onUserOffline(uid: Int, reason: Int) {
+            runOnUiThread {
+                removeRemoteView()
+            }
+        }
+
+        override fun onLeaveChannel(stats: RtcStats?) {
+            runOnUiThread {
+                finish()
+                Toast.makeText(this@CallActivity, "Call ended", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -57,10 +76,18 @@ class CallActivity : AppCompatActivity() {
         }
 
         binding.endCall.setOnClickListener {
-
+            endCall()
         }
 
+        binding.switchCamera.setOnClickListener {
+            rtcEngine.switchCamera()
+        }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        leaveChannel()
+        RtcEngine.destroy()
     }
 
     private fun checkPermission(permission: String, requestCode: Int): Boolean {
@@ -105,22 +132,23 @@ class CallActivity : AppCompatActivity() {
     private fun initSession() {
         initRtcEngine()
         setupVideoConfig()
-        setupLocalVideoView()
         joinChannel()
+        setupLocalVideoView()
     }
 
     private fun joinChannel() {
-
-    }
-
-    private fun setupLocalVideoView() {
-
+        rtcEngine.joinChannel(
+            getString(R.string.agora_token),
+            "CamChat-Channel",
+            "Extra Optional Data",
+            0
+        )
     }
 
     private fun setupVideoConfig() {
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
+        rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION)
 
-        mRtcEngine.enableVideo();
+        rtcEngine.enableVideo()
 
         rtcEngine.setVideoEncoderConfiguration(
             VideoEncoderConfiguration(
@@ -134,9 +162,53 @@ class CallActivity : AppCompatActivity() {
 
     private fun initRtcEngine() {
         try {
-            rtcEngine = RtcEngine.create(baseContext, getString(R.string.app_id), mRtcEventHandler)
+            rtcEngine = RtcEngine.create(baseContext, getString(R.string.app_id), rtcEventHandler)
         } catch (e: Exception) {
             Log.d("TAG", "RTC SDK Init Failure Error: $e")
         }
+    }
+
+    private fun setupLocalVideoView() {
+        localView = RtcEngine.CreateRendererView(baseContext)
+        localView!!.setZOrderMediaOverlay(true)
+        binding.localView.addView(localView)
+
+        rtcEngine.setupLocalVideo(VideoCanvas(localView, VideoCanvas.RENDER_MODE_FILL, 0))
+    }
+
+    private fun setupRemoteVideoView(uid: Int) {
+        if (binding.remoteView.childCount > 1) {
+            return
+        }
+        remoteView = RtcEngine.CreateRendererView(baseContext)
+        binding.remoteView.addView(remoteView)
+
+        // Try out different RENDER_MODE
+        rtcEngine.setupRemoteVideo(VideoCanvas(remoteView, VideoCanvas.RENDER_MODE_FILL, uid))
+    }
+
+    private fun removeRemoteView() {
+        if (remoteView != null) {
+            binding.remoteView.removeView(remoteView)
+        }
+        remoteView = null
+    }
+
+    private fun removeLocalView() {
+        if (localView != null) {
+            binding.localView.removeView(localView)
+        }
+        localView = null
+    }
+
+
+    private fun leaveChannel() {
+        rtcEngine.leaveChannel()
+    }
+
+    private fun endCall() {
+        removeLocalView()
+        removeRemoteView()
+        leaveChannel()
     }
 }

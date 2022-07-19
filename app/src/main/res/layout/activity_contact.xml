@@ -50,12 +50,12 @@
         android:background="@drawable/button_bg"
         app:layout_constraintTop_toBottomOf="@+id/title">
         <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="5dp"
             app:tint="@color/dark_grey"
-            android:src="@android:drawable/ic_menu_search"
+            android:src="@drawable/ic_search"
             android:contentDescription="@null" />
         <TextView
             android:layout_width="wrap_content"

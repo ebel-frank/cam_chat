@@ -46,7 +46,9 @@ class ContactActivity : AppCompatActivity() {
         }
 
         binding.searchBar.setOnClickListener {
-
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -54,8 +56,13 @@ class ContactActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-                //val post = dataSnapshot.getValue<>()
-                // ...
+                val data = dataSnapshot.children.map {
+                    it.getValue(ContactModel::class.java)!!
+                }
+                val adapter = (binding.recyclerView.adapter as ContactAdapter?)
+                if (data.size != adapter?.contacts?.size) {
+                    adapter?.setData(data)
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -78,8 +85,7 @@ class ContactActivity : AppCompatActivity() {
 
             binding.recyclerView.adapter = ContactAdapter(data)
         }
-
+        databaseRef.addValueEventListener(postListener)
     }
-
 
 }

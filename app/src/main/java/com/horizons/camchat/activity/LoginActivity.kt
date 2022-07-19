@@ -18,6 +18,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.horizons.camchat.databinding.ActivityLoginBinding
 import com.horizons.camchat.viewmodel.LoginViewModel
+import com.google.firebase.auth.UserProfileChangeRequest
+
+
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -88,12 +92,15 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-//            startActivity(Intent(this, ContactActivity::class.java))
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         startActivity(Intent(this, ContactActivity::class.java))
+                        Toast.makeText(
+                            baseContext, "Welcome ${Firebase.auth.currentUser?.displayName}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(
@@ -110,9 +117,13 @@ class LoginActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
+                        // Registration Successful
                         database.getReference("users").child(auth.currentUser?.uid!!)
                             .setValue(mapOf("name" to name.text.toString()))
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(name.text.toString()).build()
+                        auth.currentUser?.updateProfile(profileUpdates)
+                        Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
                     } else {
                         // If registration fails, display a message to the user.
                         Toast.makeText(

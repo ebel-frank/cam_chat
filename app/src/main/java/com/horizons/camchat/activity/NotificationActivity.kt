@@ -26,17 +26,16 @@ class NotificationActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         val databaseRef = Firebase.database.getReference("notifications")
+            .child(Firebase.auth.currentUser?.uid!!)
 
         databaseRef.get().addOnSuccessListener { dataSnapshot ->
-            val data = dataSnapshot.children.filter {
-                it.key != Firebase.auth.currentUser?.uid
-            }.map {
+            val data = dataSnapshot.children.map {
                 val notification = it.getValue(NotificationModel::class.java)!!
                 notification.id = it.key
                 notification
             }
 
-            binding.recyclerView.adapter = NotificationAdapter(data)
+            binding.recyclerView.adapter = NotificationAdapter(data as MutableList<NotificationModel>)
         }
 
     }

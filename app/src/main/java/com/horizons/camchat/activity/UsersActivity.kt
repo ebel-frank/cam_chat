@@ -1,14 +1,11 @@
 package com.horizons.camchat.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.horizons.camchat.adapter.ContactAdapter
 import com.horizons.camchat.adapter.UserAdapter
 import com.horizons.camchat.databinding.ActivityUsersBinding
 import com.horizons.camchat.model.ContactModel
@@ -28,19 +25,29 @@ class UsersActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val databaseRef = Firebase.database.getReference("users")
+        val databaseRef = Firebase.database
 
-        databaseRef.get().addOnSuccessListener { dataSnapshot ->
+        databaseRef.getReference("users").get().addOnSuccessListener { dataSnapshot ->
+            val uid = Firebase.auth.currentUser?.uid
             val data = dataSnapshot.children.filter {
-                it.key != Firebase.auth.currentUser?.uid
+                it.key != uid
             }.map {
                 val user = it.getValue(UserModel::class.java)!!
                 user.user_id = it.key
                 user
             }
+            data as MutableList<UserModel>
 
-            binding.recyclerView.adapter = UserAdapter(data)
+            databaseRef.getReference("connections").child(uid!!).get().addOnSuccessListener { snapshot ->
+                snapshot.children.forEach {
+                    val connection = it.getValue(ContactModel::class.java)!!
+                    data.removeIf { user ->
+                        user.user_id == connection.user_id
+                    }
+                }
+                binding.recyclerView.adapter = UserAdapter(data)
+            }
+
         }
-
     }
 }
